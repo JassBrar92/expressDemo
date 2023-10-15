@@ -1,6 +1,6 @@
 const Joi=require('joi');
 const express=require('express');
-const { error } = require('joi/lib/types/lazy');
+const object = require('joi/lib/types/object');
 const app=express();
 app.use(express.json());
 const courses=[
@@ -42,14 +42,13 @@ app.get('/api/post/:year/:month',(req,res)=>{
 });*/
 // http post request
 app.post('/api/courses',(req,res)=>{
-   const schema={
-    name:Joi.string().min(3).required()
-   };
-   const result=Joi.validate(req.body,schema);
-   if(result.error){
-    res.status(400).send(result.error.details[0].message);
+   //checking input validation
+  //Object destructing
+  const {error}=courseVaidation(req.body);
+  if(error){
+    res.status(400).send(error.details[0].message);
     return;
-   }
+  }
   const course={
     id:courses.length+1,
     name:req.body.name
@@ -57,5 +56,30 @@ app.post('/api/courses',(req,res)=>{
   courses.push(course);
   res.send(course);
 });
+//http put request
+app.put('/api/courses/:id',(req,res)=>{
+  //checking course id is valid or not
+  const course=courses.find(c=>c.id===parseInt(req.params.id));
+  console.log(course);
+  if(!course) res.status(404).send("Course id is invalid");
+  //checking input validation
+  //Object destructing
+  const {error}=courseVaidation(req.body);
+  if(error){
+    res.status(400).send(error.details[0].message);
+    return;
+  }
+  //updating course object
+   course.courseName=req.body.name;
+   res.send(course);
+  
+});
+//input validation function
+function courseVaidation(course){
+ const schema={
+  name:Joi.string().min(3).required()
+ }
+ return Joi.validate(course,schema);
+}
 const port=process.env.PORT || 3000;
 app.listen(port,()=>console.log(`listening on ${port} ...`));
