@@ -1,6 +1,5 @@
 const Joi=require('joi');
 const express=require('express');
-const object = require('joi/lib/types/object');
 const app=express();
 app.use(express.json());
 const courses=[
@@ -17,17 +16,17 @@ const courses=[
     courseName:"History"
   }
 ];
-/*app.get('/',(req,res)=>{
+app.get('/',(req,res)=>{
   res.send("hii world");
 });
 app.get('/api/courses',(req,res)=>{
-  res.send(["Math","Science","History"]);
+  res.send(courses);
 });
-app.get('/api/course/:id',(req,res)=>{
+app.get('/api/courses/:id',(req,res)=>{
   //route parameter
   //res.send((req.params.id));
   const course=courses.find(c=>c.id===parseInt(req.params.id));
-  if(!course) {res.status(404).send("course was  not found");}
+  if(!course) { return res.status(404).send("course was  not found");}
   res.send(course);
 
 });
@@ -39,7 +38,7 @@ app.get('/api/courses/:year/:month',(req,res)=>{
 // query string  parameter
 app.get('/api/post/:year/:month',(req,res)=>{
   res.send(req.query);
-});*/
+});
 // http post request
 app.post('/api/courses',(req,res)=>{
    //checking input validation
@@ -60,8 +59,7 @@ app.post('/api/courses',(req,res)=>{
 app.put('/api/courses/:id',(req,res)=>{
   //checking course id is valid or not
   const course=courses.find(c=>c.id===parseInt(req.params.id));
-  console.log(course);
-  if(!course) res.status(404).send("Course id is invalid");
+  if(!course) return res.status(404).send("Course id is invalid");
   //checking input validation
   //Object destructing
   const {error}=courseVaidation(req.body);
@@ -81,5 +79,16 @@ function courseVaidation(course){
  }
  return Joi.validate(course,schema);
 }
+// http delete request
+app.delete('/api/courses/:id',(req,res)=>{
+  // checking id is valid or not
+  const course=courses.find(c=>c.id===parseInt(req.params.id));
+  if(!course) return res.status(404).send('course id is invalid');
+  //delete course
+  const index=courses.indexOf(course);
+  courses.splice(index,1);
+  //sending deleted course to client
+  res.send(course);
+});
 const port=process.env.PORT || 3000;
 app.listen(port,()=>console.log(`listening on ${port} ...`));
