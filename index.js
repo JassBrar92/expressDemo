@@ -1,7 +1,6 @@
 const express=require('express');
-const req = require('express/lib/request');
-const res = require('express/lib/response');
 const app=express();
+app.use(express.json());
 const courses=[
   {
     id:1,
@@ -16,7 +15,7 @@ const courses=[
     courseName:"History"
   }
 ];
-app.get('/',(req,res)=>{
+/*app.get('/',(req,res)=>{
   res.send("hii world");
 });
 app.get('/api/courses',(req,res)=>{
@@ -38,6 +37,15 @@ app.get('/api/courses/:year/:month',(req,res)=>{
 // query string  parameter
 app.get('/api/post/:year/:month',(req,res)=>{
   res.send(req.query);
+});*/
+// http post request
+app.post('/api/courses',(req,res)=>{
+  const course={
+    id:courses.length+1,
+    name:req.body.name
+  }
+  courses.push(course);
+  res.send(course);
 });
 const port=process.env.PORT || 3000;
 app.listen(port,()=>console.log(`listening on ${port} ...`));
