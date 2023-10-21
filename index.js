@@ -1,3 +1,4 @@
+const config=require('config');
 const helmet=require('helmet');
 const morgan=require('morgan');
 const Joi=require('joi');
@@ -6,13 +7,17 @@ const logger=require('./logging');
 const log = require('./logging');
 const app=express();
 // use these methods to check which environement  our code is runnning  production environment or development environment
-console.log(process.env.NODE_ENV);  //it returns undefined if environment is not set
+//console.log(process.env.NODE_ENV);  //it returns undefined if environment is not set
 //console.log(app.get('env'));   // it returns by default development environment if environment is not set
 //third party middleware functions
 if(app.get('env')==='development'){
   app.use(morgan('tiny'));
   console.log("morgan enabled...");
 }
+//configration
+console.log(`Name : ${config.get('name')}`);
+console.log(`Mail : ${config.get('mail.host')}`);
+console.log(`Password : ${config.get('mail.password')}`);
 app.use(helmet());
 //built-in middleware functions
 app.use(express.urlencoded({extended:true}));
