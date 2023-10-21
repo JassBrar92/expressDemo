@@ -2,7 +2,11 @@ const Joi=require('joi');
 const express=require('express');
 const logger=require('./logging');
 const app=express();
+//built-in middleware functions
+app.use(express.urlencoded({extended:true}));
+app.use(express.static('public'));  //use to put static content like images, text files 
 app.use(express.json());
+//custom middleware functions
 app.use(logger);
 const courses=[
   {
