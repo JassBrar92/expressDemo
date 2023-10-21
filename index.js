@@ -1,7 +1,12 @@
+const helmet=require('helmet');
+const morgan=require('morgan');
 const Joi=require('joi');
 const express=require('express');
 const logger=require('./logging');
 const app=express();
+//third party middleware functions
+app.use(morgan('tiny'));
+app.use(helmet());
 //built-in middleware functions
 app.use(express.urlencoded({extended:true}));
 app.use(express.static('public'));  //use to put static content like images, text files 
