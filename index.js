@@ -1,7 +1,9 @@
 const Joi=require('joi');
 const express=require('express');
+const logger=require('./logging');
 const app=express();
 app.use(express.json());
+app.use(logger);
 const courses=[
   {
     id:1,
