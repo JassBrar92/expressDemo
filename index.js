@@ -8,6 +8,9 @@ const express=require('express');
 const logger=require('./logging');
 const log = require('./logging');
 const app=express();
+//Templating engine
+app.set('view engine','pug');
+app.set('views','./views');
 // use these methods to check which environement  our code is runnning  production environment or development environment
 //console.log(process.env.NODE_ENV);  //it returns undefined if environment is not set
 //console.log(app.get('env'));   // it returns by default development environment if environment is not set
@@ -44,7 +47,8 @@ const courses=[
   }
 ];
 app.get('/',(req,res)=>{
-  res.send("hii world");
+ // res.send("hii world");
+ res.render("index",{title:"My Express App",message:"Hello world"});
 });
 app.get('/api/courses',(req,res)=>{
   res.send(courses);
