@@ -1,3 +1,5 @@
+const startupDebugger=require('debug')('app:startup');
+const dbDebugger=require('debug')('app:db');
 const config=require('config');
 const helmet=require('helmet');
 const morgan=require('morgan');
@@ -12,12 +14,14 @@ const app=express();
 //third party middleware functions
 if(app.get('env')==='development'){
   app.use(morgan('tiny'));
-  console.log("morgan enabled...");
+  startupDebugger("morgan enabled...");    //debugging statement
 }
+// somewhere in the program there may be some database related statement
+dbDebugger("connected to database....");
 //configration
 console.log(`Name : ${config.get('name')}`);
 console.log(`Mail : ${config.get('mail.host')}`);
-console.log(`Password : ${config.get('mail.password')}`);
+//console.log(`Password : ${config.get('mail.password')}`);
 app.use(helmet());
 //built-in middleware functions
 app.use(express.urlencoded({extended:true}));
